@@ -30,8 +30,8 @@
 
 #include "connman.h"
 
-#define STATUS_URL_IPV4  "http://ipv4.connman.net/online/status.html"
-#define STATUS_URL_IPV6  "http://ipv6.connman.net/online/status.html"
+#define STATUS_URL_IPV4  "http://egear-ping-point-prod.herokuapp.com/online/status.html"
+#define STATUS_URL_IPV6  "http://egear-ping-point-prod.herokuapp.com/online/status.html"
 
 struct connman_wispr_message {
 	bool has_error;
@@ -209,7 +209,7 @@ static void free_connman_wispr_portal(gpointer data)
 {
 	struct connman_wispr_portal *wispr_portal = data;
 
-	DBG("");
+	DBG("wispr = %p", wispr_portal);
 
 	if (!wispr_portal)
 		return;
@@ -434,19 +434,19 @@ static void portal_manage_status(GWebResult *result,
 	DBG("");
 
 	/* We currently don't do anything with this info */
-	if (g_web_result_get_header(result, "X-ConnMan-Client-IP",
+	if (g_web_result_get_header(result, "X-Connman-Client-IP",
 				&str))
 		connman_info("Client-IP: %s", str);
 
-	if (g_web_result_get_header(result, "X-ConnMan-Client-Country",
+	if (g_web_result_get_header(result, "X-Connman-Client-Country",
 				&str))
 		connman_info("Client-Country: %s", str);
 
-	if (g_web_result_get_header(result, "X-ConnMan-Client-Region",
+	if (g_web_result_get_header(result, "X-Connman-Client-Region",
 				&str))
 		connman_info("Client-Region: %s", str);
 
-	if (g_web_result_get_header(result, "X-ConnMan-Client-Timezone",
+	if (g_web_result_get_header(result, "X-Connman-Client-Timezone",
 				&str))
 		connman_info("Client-Timezone: %s", str);
 
@@ -722,7 +722,7 @@ static bool wispr_portal_web_result(GWebResult *result, gpointer user_data)
 		if (wp_context->wispr_msg.message_type >= 0)
 			break;
 
-		if (g_web_result_get_header(result, "X-ConnMan-Status",
+		if (g_web_result_get_header(result, "X-Connman-Status",
 						&str)) {
 			portal_manage_status(result, wp_context);
 			return false;
@@ -944,6 +944,8 @@ int __connman_wispr_start(struct connman_service *service,
 					GINT_TO_POINTER(index), wispr_portal);
 	}
 
+	DBG("index %d, wispr %p", index, wispr_portal);
+
 	if (type == CONNMAN_IPCONFIG_TYPE_IPV4)
 		wp_context = wispr_portal->ipv4_context;
 	else if (type == CONNMAN_IPCONFIG_TYPE_IPV6)
@@ -951,13 +953,17 @@ int __connman_wispr_start(struct connman_service *service,
 	else
 		return -EINVAL;
 
-	/* If there is already an existing context, we wipe it */
+	DBG("old = %p", wp_context);
+
+	/* SCV - Don't do anything if a wp_context already exists */
 	if (wp_context)
-		free_connman_wispr_portal_context(wp_context);
+		return 0;
 
 	wp_context = create_wispr_portal_context();
 	if (!wp_context)
 		return -ENOMEM;
+
+	DBG("new = %p", wp_context);
 
 	wp_context->service = service;
 	wp_context->type = type;

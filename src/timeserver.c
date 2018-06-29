@@ -179,11 +179,9 @@ GSList *__connman_timeserver_add_list(GSList *server_list,
 GSList *__connman_timeserver_get_all(struct connman_service *service)
 {
 	GSList *list = NULL;
-	struct connman_network *network;
 	char **timeservers;
 	char **service_ts;
 	char **service_ts_config;
-	const char *service_gw;
 	char **fallback_ts;
 	int index, i;
 
@@ -203,17 +201,6 @@ GSList *__connman_timeserver_get_all(struct connman_service *service)
 	/* Then add Service Timeservers via DHCP to the list */
 	for (i = 0; service_ts && service_ts[i]; i++)
 		list = __connman_timeserver_add_list(list, service_ts[i]);
-
-	network = __connman_service_get_network(service);
-	if (network) {
-		index = connman_network_get_index(network);
-		service_gw = __connman_ipconfig_get_gateway_from_index(index,
-			CONNMAN_IPCONFIG_TYPE_ALL);
-
-		/* Then add Service Gateway to the list */
-		if (service_gw)
-			list = __connman_timeserver_add_list(list, service_gw);
-	}
 
 	/* Then add Global Timeservers to the list */
 	timeservers = load_timeservers();

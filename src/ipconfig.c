@@ -819,7 +819,7 @@ void __connman_ipconfig_newroute(int index, int family, unsigned char scope,
 		}
 	}
 
-	connman_info("%s {add} route %s gw %s scope %u <%s>",
+	DBG("%s {add} route %s gw %s scope %u <%s>",
 		ifname, dst, gateway, scope, scope2str(scope));
 
 out:
@@ -886,7 +886,7 @@ void __connman_ipconfig_delroute(int index, int family, unsigned char scope,
 		}
 	}
 
-	connman_info("%s {del} route %s gw %s scope %u <%s>",
+	DBG("%s {del} route %s gw %s scope %u <%s>",
 		ifname, dst, gateway, scope, scope2str(scope));
 
 out:

@@ -1729,14 +1729,15 @@ static gboolean continue_renew (gpointer user_data)
 
 	dhcp_client->T1 >>= 1;
 
-	if (dhcp_client->T1 > 60) {
-		dhcp_get_random(&rand);
-		dhcp_client->t1_timeout = g_timeout_add_full(G_PRIORITY_HIGH,
-				dhcp_client->T1 * 1000 + (rand % 2000) - 1000,
-				continue_renew,
-				dhcp_client,
-				NULL);
-	}
+	if (dhcp_client->T1 < 15)
+		dhcp_client->T1 = 15;
+
+	dhcp_get_random(&rand);
+	dhcp_client->t1_timeout = g_timeout_add_full(G_PRIORITY_HIGH,
+			dhcp_client->T1 * 1000 + (rand % 2000) - 1000,
+			continue_renew,
+			dhcp_client,
+			NULL);
 
 	return FALSE;
 }

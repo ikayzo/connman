@@ -187,8 +187,8 @@ plugindir = $(libdir)/connman/plugins
 
 scriptdir = $(libdir)/connman/scripts
 
-storagedir = $(localstatedir)/lib/connman
-vpn_storagedir = $(localstatedir)/lib/connman-vpn
+storagedir = /var/persist/connman
+vpn_storagedir = /var/persist/connman-vpn
 
 configdir = ${sysconfdir}/connman
 

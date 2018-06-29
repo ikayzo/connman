@@ -91,7 +91,7 @@ GKeyFile *__connman_storage_load_global(void)
 	gchar *pathname;
 	GKeyFile *keyfile = NULL;
 
-	pathname = g_strdup_printf("%s/%s", STORAGEDIR, SETTINGS);
+	pathname = g_strdup_printf("%s/%s", CONFIGDIR, SETTINGS);
 	if (!pathname)
 		return NULL;
 
@@ -107,7 +107,7 @@ int __connman_storage_save_global(GKeyFile *keyfile)
 	gchar *pathname;
 	int ret;
 
-	pathname = g_strdup_printf("%s/%s", STORAGEDIR, SETTINGS);
+	pathname = g_strdup_printf("%s/%s", CONFIGDIR, SETTINGS);
 	if (!pathname)
 		return -ENOMEM;
 
@@ -122,7 +122,7 @@ void __connman_storage_delete_global(void)
 {
 	gchar *pathname;
 
-	pathname = g_strdup_printf("%s/%s", STORAGEDIR, SETTINGS);
+	pathname = g_strdup_printf("%s/%s", CONFIGDIR, SETTINGS);
 	if (!pathname)
 		return;
 
